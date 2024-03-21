@@ -31,7 +31,7 @@ export const insertOne = (req, res) => {
   productDAO.insertOne(req.body)
     .then(result => {
       console.log("Producto guardado");
-      res.redirect('/');
+      res.json({ message: "Producto guardado exitosamente" }); // Respuesta JSON sin URL de redirección
     })
     .catch(err => {
       console.error(err);
@@ -41,6 +41,7 @@ export const insertOne = (req, res) => {
       }); 
     });
 };
+
 
 
 export const deleteOne = (req, res) => {
