@@ -44,7 +44,8 @@ export const deleteOne = (req, res) => {
           message: "Product not found :/"
         });
       }
-      res.redirect('/');
+      // Producto eliminado con éxito
+      res.json({ message: 'Product deleted successfully' });
     })
     .catch(err => { 
       console.error(err);
@@ -54,6 +55,7 @@ export const deleteOne = (req, res) => {
       }); 
     });
 };
+
 
 export const updateOne = (req, res) => {
   const barcode = req.params.barcode; 
