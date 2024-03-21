@@ -5,36 +5,43 @@ export const getAll = (req, res) => {
     .then(products => {
       res.json({ products });
     })
-    .catch(err => res.json({
+    .catch(err => res.status(500).json({
       status: "Server unavailable",
-      error: err
+      error: err.message // Acceso al mensaje de error
     }));
 };
 
 export const getOne = (req, res) => {
   productDAO.getOne(req.params.barcode)
     .then(product => {
-      !product ? res.json({
-        message: "product not found :/"
-      }) : res.json({ product });
+      if (!product) {
+        return res.status(404).json({
+          message: "Product not found :/"
+        });
+      }
+      res.json({ product });
     })
-    .catch(err => res.json({
+    .catch(err => res.status(500).json({
       status: "Server unavailable",
-      error: err
+      error: err.message // Acceso al mensaje de error
     }));
 };
 
 export const insertOne = (req, res) => {
   productDAO.insertOne(req.body)
     .then(result => {
-      console.log("producto guardado");
+      console.log("Producto guardado");
       res.redirect('/');
     })
-    .catch(err => res.json({
-      status: "Server unavailable",
-      error: err
-    }));
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ 
+        status: "Server unavailable", 
+        error: err.message // Acceso al mensaje de error
+      }); 
+    });
 };
+
 
 export const deleteOne = (req, res) => {
   productDAO.deleteOne(req.params.barcode)
@@ -44,14 +51,16 @@ export const deleteOne = (req, res) => {
           message: "Product not found :/"
         });
       }
-      // Producto eliminado con éxito
-      res.json({ message: 'Product deleted successfully' });
+      // Si el producto se eliminó correctamente, devuelve un mensaje de éxito
+      res.status(200).json({
+        message: "Product deleted successfully"
+      });
     })
     .catch(err => { 
       console.error(err);
       res.status(500).json({ 
         status: "Server unavailable", 
-        error: err 
+        error: err.message // Acceso al mensaje de error
       }); 
     });
 };
